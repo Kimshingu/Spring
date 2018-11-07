@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!-- 
+//		CarMaker KiaMaker = new KiaMaker();
+//		CarMaker HyundaiMaker = new HyundaiMaker();
+//		
+//		OrderManager manager = new OrderManager();
+//		manager.setMaker(KiaMaker);
+//		manager.order();
+ -->
+ 
+ <bean id="KiaMaker" class="com.example.demo.ioc.step3.KiaMaker"></bean>
+ <bean id="HyundaiMaker" class="com.example.demo.ioc.step3.HyundaiMaker"></bean>
+ 
+ <bean id="manager" class="com.example.demo.ioc.step3.OrderManager">
+ 	<constructor-arg ref="kiaMaker"></constructor-arg>
+ 	<!--setter = property name은 setter의 멤버변수  --> 
+ </bean>
+</beans>
