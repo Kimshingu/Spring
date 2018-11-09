@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Qualifier("myService")
-@Order(1)
+@Order(3)
 public class Service2 implements TheService{
 	public void Call() {
 		System.out.println("Service2 called");

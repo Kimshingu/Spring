@@ -24,7 +24,6 @@ public class Test { // Client]
 		 *  어떻게 해결해야 할까요?
 		 */
 		
-		
 		Hello hello = new HelloImpl(); // Service
 		hello.say();
 		

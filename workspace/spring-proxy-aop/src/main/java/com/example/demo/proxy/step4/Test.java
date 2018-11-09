@@ -1,4 +1,4 @@
-package com.example.demo.proxy.step3;
+package com.example.demo.proxy.step4;
 
 import java.lang.reflect.Proxy;
 
@@ -27,9 +27,7 @@ public class Test { // Client
 										new Class[] {Hello.class},
 										new MyAdvice(hello));
 		proxy.say();
-		
 		System.out.println();
-		
 		Hi proxy2 =  (Hi) Proxy.newProxyInstance(Hi.class.getClassLoader(),
 				new Class[] {Hi.class},
 				new MyAdvice(hi));
