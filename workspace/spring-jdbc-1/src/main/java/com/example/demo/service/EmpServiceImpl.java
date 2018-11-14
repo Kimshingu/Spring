@@ -7,11 +7,21 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.example.demo.dao.EmpDao;
 import com.example.demo.model.Emp;
 
+//클래스에 트랜잭션 설정을 하면 이 안에 있는 모든 메소드에 트랜잭션이 적용됩니다.
+//서비스 메소드에서 다수의 DAO 메소드를 호출하면, 그 메소드 모두 하나의 트랜잭션
+//단위로 처리됩니다.
+@Transactional(isolation = Isolation.DEFAULT, 
+					propagation = Propagation.REQUIRED, 
+					timeout = -1, 
+					readOnly = false)
 @Service
 public class EmpServiceImpl implements EmpService {
 	@Autowired
@@ -24,7 +34,7 @@ public class EmpServiceImpl implements EmpService {
 	public int insert(Emp emp) throws Exception {
 		// 트랜잭션과 관련한 4가지 속성을 어떻게 적용할 것인가와 관련한 정보를 취급하는 객체
 		DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-		
+
 		// 아래 설정은 모두 디폴트 값을 사용하고 있다.
 		transactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
 		transactionDefinition.setIsolationLevel(TransactionDefinition.ISOLATION_DEFAULT);
@@ -32,17 +42,17 @@ public class EmpServiceImpl implements EmpService {
 		// 조회쿼리를 수행할 때 true로 변경하면
 		// 이 트랜잭션을 제치고 다른 트랜잭션이 먼저 작업하는 것을 허용한다.
 		transactionDefinition.setReadOnly(false);
-		
+
 		// 이 객체를 이용하여 나중에 RollBack 또는 Commit을 적용할 때 사용한다.
 		TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 		int affected = 0;
 		try {
 			// 상단 부분 코드 : Around:Before Advice
 			// ************************************
-			
+
 			// Delegation: 타겟 메소드의 핵심로직을 호출한다.
 			affected = empDao.insert(emp);
-			
+
 			// 이해를 돕기 위해서 추가로 여러 DAO의 여러 메소드를 호출하는 로직이 있다고 생각하자.
 			// ************************************
 			// 하단 부분 코드 : Around:After Advice
@@ -63,17 +73,22 @@ public class EmpServiceImpl implements EmpService {
 	public int delete(int empno) throws Exception {
 		return empDao.delete(empno);
 	}
-
+	
+	// 메소드 위에 설정이 클래스 위에 한 설정보다 우선적으로 적용됩니다.
+	// 조회 쿼리는 읽기전용임을 통보하여 격리시간을 줄이도록 노력합니다.
+	@Transactional(readOnly=true)
 	@Override
 	public List<Emp> findAll() throws Exception {
 		return empDao.findAll();
 	}
-
+	
+	@Transactional(readOnly=true)
 	@Override
 	public int count() throws Exception {
 		return empDao.count();
 	}
-
+	
+	@Transactional(readOnly=true)
 	@Override
 	public Emp findOne(int empno) throws Exception {
 		return empDao.findOne(empno);

@@ -34,12 +34,12 @@ public class EmpDaoImpl implements EmpDao {
 		}
 	};
 
-// 빈 컨테이너에 JdbcTemplate이 없을 때 대신 DataSource를 받아서 처리하는 방식
-// @Autowired
-// public void setDataSource(DataSource dataSource) {
-// this.jdbcTemplate = new JdbcTemplate(dataSource);
-// }
-// 메소드마다 반복적으로 사용되는 부분을 밖으로 빼내는 방법을 고려해 보자.
+	// 빈 컨테이너에 JdbcTemplate이 없을 때 대신 DataSource를 받아서 처리하는 방식
+	// @Autowired
+	// public void setDataSource(DataSource dataSource) {
+	// this.jdbcTemplate = new JdbcTemplate(dataSource);
+	// }
+	// 메소드마다 반복적으로 사용되는 부분을 밖으로 빼내는 방법을 고려해 보자.
 	@Override
 	public int insert(Emp emp) {
 		String sql = "insert into EMP9(empno, ename, job, sal) values(?, ?, ?, ?)";
@@ -48,11 +48,17 @@ public class EmpDaoImpl implements EmpDao {
 		// ? 기호는 나중에 update 메소드 내에서 개발자가 추가로 알려준 값으로 치환된다.
 		
 		// 수정 메소드는 영향 받는 로우의 개수 값을 리턴한다.
+		
 		int affected = jdbcTemplate.update(sql, 
 				emp.getEmpno(), 
 				emp.getEname(), 
 				emp.getJob(), 
 				emp.getSal());
+		/*
+		* 트랜잭션 테스트
+		*/
+//		System.out.println("영향받은 로우의 개수 = " + affected);
+//		throw new RuntimeException("트랜잭션 테스트 용 언체크드 예외");
 		return affected;
 	}
 

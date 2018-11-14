@@ -14,6 +14,6 @@ public interface EmpDao {
 	
 	// 조회쿼리: 테이블의 로우의 상태정보가 변하지 않는다.
 	public List<Emp> findAll();
-	public int count();
 	public Emp findOne(int empno);
+	public int count();
 	}
